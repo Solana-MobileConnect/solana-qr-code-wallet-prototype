@@ -1,13 +1,17 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiRequest, NextApiResponse } from "next"
 
 type Data = {
-  name: string
+  name: string,
+  counter: int
 }
+
+let counter = 0
 
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  res.status(200).json({ name: 'John Doe' })
+  counter++
+  console.log("new counter:", counter)
+  res.status(200).json({ name: 'John Doe', counter: counter })
 }
