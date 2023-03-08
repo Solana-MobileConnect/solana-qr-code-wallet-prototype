@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 
 import { clusterApiUrl, Connection, Keypair, PublicKey, SystemProgram, LAMPORTS_PER_SOL, Transaction } from "@solana/web3.js"
 
-import { transaction_sessions } from '../../storage/session_management'
+import { transaction_sessions, saveSessionData } from '../../storage/session_management'
 
 const FUNDED_ACCOUNT = '77Dn6Xm3MjpUyyAh318WtHFvAcLSPrwUChLbpM2Ngnm3'
 
@@ -55,6 +55,8 @@ async function post(
     'tx': tx,
     'state': 'unconfirmed'
   }
+
+  saveSessionData()
   
   console.log(transaction_sessions)
 
