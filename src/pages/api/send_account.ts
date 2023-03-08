@@ -2,6 +2,8 @@ import { NextApiRequest, NextApiResponse } from "next"
 
 import { clusterApiUrl, Connection, Keypair, PublicKey, SystemProgram, LAMPORTS_PER_SOL, Transaction } from "@solana/web3.js"
 
+import { login_sessions } from '../../storage/session_management'
+
 const FUNDED_ACCOUNT = '77Dn6Xm3MjpUyyAh318WtHFvAcLSPrwUChLbpM2Ngnm3'
 
 type InputData = {
@@ -42,6 +44,8 @@ async function post(
   }
 
   console.log("Account:", account)
+  
+  login_sessions['test'] = account
 
   const connection = new Connection(clusterApiUrl('devnet'))
 
@@ -75,7 +79,9 @@ async function post(
 
   res.status(200).json({
     transaction: encodedTransaction,
-    message: "Logged in!"
+    message: "Logged in! (Ignore this transaction)"
+    //message: "Ignore this transaction"
+    //message: "Logged in!"
     //message: "Successfully logged in! (Ignore this transaction)"
   })
 }
