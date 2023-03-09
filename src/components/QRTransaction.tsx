@@ -18,7 +18,7 @@ export default function QRTransaction({ account }: Props) {
 
   const txQrRef = useRef<HTMLDivElement>(null)
 
-  const [performPolling, setPerformPolling] = useState(true)
+  const [performPolling, setPerformPolling] = useState(false)
   const currentTxId = useRef(undefined)
 
   const [confirmedTx, setConfirmedTx] = useState(undefined)
@@ -86,6 +86,8 @@ export default function QRTransaction({ account }: Props) {
     prepTransaction().then(
       (txId) => {
         currentTxId.current = txId
+
+        setPerformPolling(true)
 
         const { location } = window
         const url = `${location.protocol}//${location.host}/api/get_transaction?tx_id=${txId}`
