@@ -29,6 +29,8 @@ function get(req: NextApiRequest, res: NextApiResponse<ApiResponse>) {
 
   const tx_id = req.query['tx_id'] as string
 
+  // TODO: If it's confirmed, send it and remove it
+
   const transaction = transaction_sessions[tx_id]
 
   return res.status(200).json({
@@ -57,8 +59,6 @@ async function post(
   }
 
   saveSessionData()
-  
-  console.log(transaction_sessions)
 
   return res.status(200).json({ tx_id: tx_id, tx_state: 'unconfirmed' })
 }

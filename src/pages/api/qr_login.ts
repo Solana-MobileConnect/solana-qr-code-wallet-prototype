@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 
 import { clusterApiUrl, Connection, Keypair, PublicKey, SystemProgram, LAMPORTS_PER_SOL, Transaction } from "@solana/web3.js"
 
-import { login_sessions } from '../../storage/session_management'
+import { login_sessions, saveSessionData } from '../../storage/session_management'
 
 const FUNDED_ACCOUNT = '77Dn6Xm3MjpUyyAh318WtHFvAcLSPrwUChLbpM2Ngnm3'
 
@@ -21,6 +21,11 @@ type ErrorResponse = {
 
 function get(res: NextApiResponse<GetResponse>) {
   const account = login_sessions['test']
+
+  if (account !== undefined) {
+    login_sessions['test'] = undefined
+    saveSessionData()
+  }
 
   return res.status(200).json({
     login_id: 'test',

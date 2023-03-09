@@ -36,7 +36,7 @@ export default function QRTransaction({ account }: Props) {
         })
       )
 
-      tx.feePayer = new PublicKey(RECEIVER_ACCOUNT)
+      tx.feePayer = new PublicKey(account)
 
       const latestBlockhash = await connection.getLatestBlockhash()
       tx.recentBlockhash = latestBlockhash.blockhash
@@ -66,7 +66,7 @@ export default function QRTransaction({ account }: Props) {
 
     async function prepTransaction() {
       const tx = await createTransaction()
-      console.log(tx)
+      //console.log(tx)
 
       const txId = await registerTransaction(tx)
       console.log(txId)
@@ -98,7 +98,6 @@ export default function QRTransaction({ account }: Props) {
 
   }, [account])
 
-  /*
   async function poll() {
     console.log("Polling...")
 
@@ -116,7 +115,6 @@ export default function QRTransaction({ account }: Props) {
   }
 
   useInterval(poll, performPolling ? POLLING_INTERVAL : null)
-  */
 
   return  (
     <div>

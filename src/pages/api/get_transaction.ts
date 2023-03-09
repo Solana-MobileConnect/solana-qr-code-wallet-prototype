@@ -48,8 +48,6 @@ async function post(
 
   const tx_id = req.query['tx_id'] as string | undefined
 
-  console.log(transaction_sessions)
-
   if (tx_id === undefined || (!(tx_id in transaction_sessions)) ) {
     console.log("Invalid request")
     return res.status(400)
