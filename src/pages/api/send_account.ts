@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 
 import { clusterApiUrl, Connection, Keypair, PublicKey, SystemProgram, LAMPORTS_PER_SOL, Transaction } from "@solana/web3.js"
 
-import { login_sessions } from '../../storage/session_management'
+import { login_sessions, saveSessionData } from '../../storage/session_management'
 
 const FUNDED_ACCOUNT = '77Dn6Xm3MjpUyyAh318WtHFvAcLSPrwUChLbpM2Ngnm3'
 
@@ -59,6 +59,8 @@ async function post(
   // Associate account with login_id
   
   login_sessions[login_id] = account
+
+  saveSessionData()
   
   // Create dummy transaction
 

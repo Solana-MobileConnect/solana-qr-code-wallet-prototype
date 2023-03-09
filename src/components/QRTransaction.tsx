@@ -23,9 +23,18 @@ export default function QRTransaction({ account }: Props) {
 
   const [confirmedTx, setConfirmedTx] = useState(undefined)
 
+  const useEffectCalled = useRef(false)
+
   useEffect(() => {
+
+    // TODO: better way to call it only once
+    if (useEffectCalled.current) {
+      return
+    }
     
     async function createTransaction() {
+
+      useEffectCalled.current = true
 
       const connection = new Connection(clusterApiUrl('devnet'))
 

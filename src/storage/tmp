@@ -1,0 +1,16 @@
+
+
+
+const login_sessions: LoginSessions = require('/tmp/login_sessions.json')
+// const login_sessions: LoginSessions = {}
+
+
+const transaction_sessions: TransactionSessions = require('/tmp/transaction_sessions.json')
+//const transaction_sessions: TransactionSessions = {}
+
+export {login_sessions, transaction_sessions}
+
+export function saveSessionData() {
+    fs.writeFileSync('data/login_sessions.json', JSON.stringify(login_sessions, null, 4));
+    fs.writeFileSync('data/transaction_sessions.json', JSON.stringify(transaction_sessions, null, 4));
+}

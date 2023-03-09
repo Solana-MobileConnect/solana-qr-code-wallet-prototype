@@ -9,8 +9,6 @@ export default function Home() {
 
   const [account, setAccount] = useState<string | undefined>(undefined)
 
-  console.log(account)
-
   return (
     <>
       <Head>

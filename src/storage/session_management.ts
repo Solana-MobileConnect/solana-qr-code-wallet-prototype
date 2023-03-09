@@ -1,24 +1,24 @@
-console.log("session management")
-
-const fs = require('fs');
-
+import fs from 'fs'
 
 import path from 'path';
 
-const file = path.join(process.cwd(), 'data', 'test.json');
-fs.writeFileSync(file, '{"a":1}');
-const fileContent = fs.readFileSync(file, 'utf-8');
-
-console.log(fileContent)
-
-
+// Login sessions
 
 type LoginSessions = {
   [index: string]: string | undefined
 }
 
-const login_sessions: LoginSessions = require('data/login_sessions.json')
-// const login_sessions: LoginSessions = {}
+const loginSessionsFile = path.join('/tmp', 'login_sessions.json')
+
+if (!fs.existsSync(loginSessionsFile)) {
+  fs.writeFileSync(loginSessionsFile, '{}');
+}
+
+const loginSessionsFileContent = fs.readFileSync(loginSessionsFile, 'utf-8');
+
+export const login_sessions: LoginSessions = JSON.parse(loginSessionsFileContent)
+
+// Transaction sessions
 
 type TransactionSessions = {
   /*
@@ -31,12 +31,17 @@ type TransactionSessions = {
  [index: string]: any
 }
 
-const transaction_sessions: TransactionSessions = require('data/transaction_sessions.json')
-//const transaction_sessions: TransactionSessions = {}
+const txSessionsFile = path.join('/tmp', 'transaction_sessions.json')
 
-export {login_sessions, transaction_sessions}
+if (!fs.existsSync(txSessionsFile)) {
+  fs.writeFileSync(txSessionsFile, '{}');
+}
+
+const txSessionsFileContent = fs.readFileSync(txSessionsFile, 'utf-8');
+
+export const transaction_sessions: TransactionSessions = JSON.parse(txSessionsFileContent)
 
 export function saveSessionData() {
-    fs.writeFileSync('data/login_sessions.json', JSON.stringify(login_sessions, null, 4));
-    fs.writeFileSync('data/transaction_sessions.json', JSON.stringify(transaction_sessions, null, 4));
+    fs.writeFileSync('/tmp/login_sessions.json', JSON.stringify(login_sessions, null, 4));
+    fs.writeFileSync('/tmp/transaction_sessions.json', JSON.stringify(transaction_sessions, null, 4));
 }
