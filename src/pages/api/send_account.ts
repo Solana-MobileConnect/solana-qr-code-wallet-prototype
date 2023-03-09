@@ -36,6 +36,9 @@ async function post(
   req: NextApiRequest,
   res: NextApiResponse<PostResponse | PostError>
 ) {
+
+  // Ensure valid Solana Pay request
+  
   const { account } = req.body as InputData
   console.log(req.body)
   if (!account) {
@@ -45,7 +48,19 @@ async function post(
 
   console.log("Account:", account)
   
-  login_sessions['test'] = account
+  // Get login_id from query string
+  
+  if (!('login_id' in req.query)) {
+    return res.status(400)
+  }
+
+  const login_id = req.query['login_id'] as string
+  
+  // Associate account with login_id
+  
+  login_sessions[login_id] = account
+  
+  // Create dummy transaction
 
   const connection = new Connection(clusterApiUrl('devnet'))
 

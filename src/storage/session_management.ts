@@ -3,16 +3,20 @@ console.log("session management")
 const fs = require('fs');
 
 type LoginSessions = {
-  [index: string]: string
+  [index: string]: string | undefined
 }
 
 const login_sessions: LoginSessions = require('data/login_sessions.json')
 
 type TransactionSessions = {
+  /*
   [index: string]: {
     tx: string,
-    state: string
+    state: string,
+    private_tx_id: string
   }
+  */
+ [index: string]: any
 }
 
 const transaction_sessions: TransactionSessions = require('data/transaction_sessions.json')

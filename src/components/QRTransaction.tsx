@@ -12,18 +12,19 @@ type Props = Readonly<{
   account: string
 }>
 
+const POLLING_INTERVAL = 1000
+
 export default function QRTransaction({ account }: Props) {
 
   const txQrRef = useRef<HTMLDivElement>(null)
 
-  const [performPolling, setPerformPolling] = useState(false)
-  const [currentTxId, setCurrentTxId] = useState(undefined)
+  const [performPolling, setPerformPolling] = useState(true)
+  const currentTxId = useRef(undefined)
 
+  const [confirmedTx, setConfirmedTx] = useState(undefined)
 
   useEffect(() => {
     
-    // TODO: is called multiple times
-
     async function createTransaction() {
 
       const connection = new Connection(clusterApiUrl('devnet'))
@@ -75,7 +76,7 @@ export default function QRTransaction({ account }: Props) {
 
     prepTransaction().then(
       (txId) => {
-        setCurrentTxId(txId)
+        currentTxId.current = txId
 
         const { location } = window
         const url = `${location.protocol}//${location.host}/api/get_transaction?tx_id=${txId}`
@@ -99,9 +100,12 @@ export default function QRTransaction({ account }: Props) {
   }, [account])
 
   async function poll() {
+    if (!performPolling) {
+      return
+    }
     console.log("Polling...")
 
-    const responseRaw = await fetch('/api/qr_transaction')
+    const responseRaw = await fetch('/api/qr_transaction?tx_id=' + currentTxId.current)
 
     if (!responseRaw.ok) {
       console.log("Request failed")
@@ -111,7 +115,11 @@ export default function QRTransaction({ account }: Props) {
     const response = await responseRaw.json()
     console.log(response)
 
-    // update current tx state
+    if (response['tx_state'] == 'confirmed') {
+      console.log("Transaction confirmed")
+      setPerformPolling(false)
+      setConfirmedTx(response['tx_sig'])
+    }
   }
 
   useInterval(poll, performPolling ? POLLING_INTERVAL : null)
@@ -121,10 +129,19 @@ export default function QRTransaction({ account }: Props) {
       <div>
         Logged in as {account}
       </div>
-      <div>
-        Scan this QR code to perform a transaction (send 0.01 SOL to a devnet account)
-      </div>
-      <div ref={txQrRef} />
+      {
+        !confirmedTx ? 
+          <>
+            <div>
+              Scan this QR code to perform a transaction (send 0.01 SOL to a devnet account)
+            </div>
+            <div ref={txQrRef} />
+          </>
+          :
+          <div>
+            Transaction confirmed ✅: {confirmedTx}
+          </div>
+      }
     </div>
   )
 }

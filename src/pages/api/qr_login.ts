@@ -4,7 +4,7 @@ import { clusterApiUrl, Connection, Keypair, PublicKey, SystemProgram, LAMPORTS_
 
 import { login_sessions, saveSessionData } from '../../storage/session_management'
 
-const FUNDED_ACCOUNT = '77Dn6Xm3MjpUyyAh318WtHFvAcLSPrwUChLbpM2Ngnm3'
+import { v4 as uuid } from "uuid"
 
 type InputData = {
   account: string,
@@ -15,41 +15,55 @@ type GetResponse = {
   account: string | undefined,
 }
 
+type PostResponse = {
+  login_id: string
+}
+
 type ErrorResponse = {
   error: string
 }
 
-function get(res: NextApiResponse<GetResponse>) {
-  const account = login_sessions['test']
+function get(req: NextApiRequest, res: NextApiResponse<GetResponse>) {
 
-  if (account !== undefined) {
-    login_sessions['test'] = undefined
-    saveSessionData()
+  if (!('login_id' in req.query)) {
+    return res.status(400)
   }
 
+  const login_id = req.query['login_id'] as string
+  const account = login_sessions[login_id]
+
   return res.status(200).json({
-    login_id: 'test',
+    login_id: login_id,
     account: account
   })
 }
 
-/*
 async function post(
   req: NextApiRequest,
-  res: NextApiResponse<PostResponse | PostError>
+  res: NextApiResponse<PostResponse>
 ) {
+  console.log("Create new login session")
+
+  const login_id = uuid()
+
+  console.log("Login ID: " + login_id)
+  
+  login_sessions[login_id] = undefined
+  saveSessionData()
+
+  return res.status(200).json({
+    login_id: login_id
+  })
 }
-*/
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<GetResponse | ErrorResponse>
+  res: NextApiResponse<GetResponse | PostResponse | ErrorResponse>
 ) {
   if (req.method === "GET") {
-    return get(res)
+    return get(req, res)
   } else if (req.method === "POST") {
-    return res.status(500)
-    //return await post(req, res)
+    return await post(req, res)
   } else {
     return res.status(405).json({ error: "Method not allowed" })
   }
