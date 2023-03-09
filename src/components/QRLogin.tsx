@@ -22,10 +22,10 @@ export default function QRLogin({ setAccount }: Props) {
     if (useEffectCalled.current) {
       return
     }
+      
+    useEffectCalled.current = true;
     
     (async () => {
-      
-      useEffectCalled.current = true
 
       const responseRaw = await fetch('/api/qr_login', {
         method: 'POST',

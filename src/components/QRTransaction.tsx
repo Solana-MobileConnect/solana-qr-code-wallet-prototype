@@ -31,10 +31,10 @@ export default function QRTransaction({ account }: Props) {
     if (useEffectCalled.current) {
       return
     }
-    
-    async function createTransaction() {
 
-      useEffectCalled.current = true
+    useEffectCalled.current = true
+  
+    async function createTransaction() {
 
       const connection = new Connection(clusterApiUrl('devnet'))
 
