@@ -61,6 +61,10 @@ export default function QRLogin({ setAccount }: Props) {
   }, [])
 
   async function poll() {
+    if (!currentLoginId.current) {
+      return
+    }
+
     console.log("Polling...")
 
     const responseRaw = await fetch(`/api/qr_login?login_id=${currentLoginId.current}`)

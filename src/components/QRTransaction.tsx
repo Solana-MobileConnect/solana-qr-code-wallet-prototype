@@ -103,6 +103,10 @@ export default function QRTransaction({ account }: Props) {
     if (!performPolling) {
       return
     }
+    if (!currentTxId.current) {
+      return
+    }
+
     console.log("Polling...")
 
     const responseRaw = await fetch('/api/qr_transaction?tx_id=' + currentTxId.current)

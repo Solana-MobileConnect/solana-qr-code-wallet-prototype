@@ -2,11 +2,23 @@ console.log("session management")
 
 const fs = require('fs');
 
+
+import path from 'path';
+
+const file = path.join(process.cwd(), 'data', 'test.json');
+fs.writeFileSync(file, '{"a":1}');
+const fileContent = fs.readFileSync(file, 'utf-8');
+
+console.log(fileContent)
+
+
+
 type LoginSessions = {
   [index: string]: string | undefined
 }
 
 const login_sessions: LoginSessions = require('data/login_sessions.json')
+// const login_sessions: LoginSessions = {}
 
 type TransactionSessions = {
   /*
@@ -20,6 +32,7 @@ type TransactionSessions = {
 }
 
 const transaction_sessions: TransactionSessions = require('data/transaction_sessions.json')
+//const transaction_sessions: TransactionSessions = {}
 
 export {login_sessions, transaction_sessions}
 
